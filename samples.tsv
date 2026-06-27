@@ -1,0 +1,5 @@
+barcode	key	strain	reference	operon	rrn_copies
+barcode01	bsubtilis	Bacillus subtilis 168	reference_seqs/ref_bsubtilis_168.fna	reference_seqs/operons/bsubtilis_rrn_operon.fna	10
+barcode02	ecoli_O157	Escherichia coli O157:H7 Sakai	reference_seqs/ref_ecoli_O157_Sakai.fna	reference_seqs/operons/ecoli_O157_rrn_operon.fna	7
+barcode03	lcasei	Lacticaseibacillus casei ATCC 393	reference_seqs/ref_lcasei_ATCC393.fna	reference_seqs/operons/lcasei_rrn_operon.fna	5
+barcode04	ecoli_K12	Escherichia coli DH5alpha (K-12)	reference_seqs/ref_ecoli_K12_MG1655.fna	reference_seqs/operons/ecoli_K12_rrn_operon.fna	7

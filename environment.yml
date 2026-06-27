@@ -1,0 +1,35 @@
+name: bip
+
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - python=3.13
+  - jupyterlab
+  - ipykernel
+  - biopython
+  - matplotlib
+  - pandas
+  - pod5
+  - fastplong
+  - nanoplot
+  - nanocomp
+  - samtools
+  - minimap2
+  - mosdepth            # fast windowed coverage depth (rrn / plasmid copy-number plots)
+  - pysam
+  - ncbi-datasets-cli   # download reference genomes by accession
+  - entrez-direct       # efetch/esearch (alternative reference download)
+  - tree
+  - ca-certificates
+  - openssl
+  - certifi
+  # Optional de-novo assembly capstone — heavier (~8-16 GB RAM). The notebook ships a
+  # pre-computed Flye result; uncomment only if you want to run the assembly yourself.
+  # - flye
+  # pod5 0.3.39 needs pyarrow ~22 for read.signal; conda-forge only ships that build
+  # for python >= 3.14, so install it via pip to override the conda-resolved pyarrow.
+  - pip
+  - pip:
+      - pyarrow>=22,<23

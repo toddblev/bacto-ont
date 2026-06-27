@@ -1,0 +1,9 @@
+2026-06-25 20:34:37,380 NanoComp 1.25.6 started with arguments Namespace(threads=8, outdir='qc/model_compare', prefix='models_', verbose=False, raw=False, store=False, tsv_stats=False, no_static=False, readtype='1D', maxlength=None, minlength=None, barcoded=False, split_runs=False, format=['png'], names=['fast', 'hac', 'sup'], colors=None, plot='violin', title=None, dpi=100, fasta=None, fastq=None, fastq_rich=None, summary=['_prep/modelcmp/fast/sequencing_summary.txt', '_prep/modelcmp/hac/sequencing_summary.txt', '_prep/modelcmp/sup/sequencing_summary.txt'], bam=None, ubam=None, cram=None, pickle=None, feather=None, path='qc/model_compare/models_')
+2026-06-25 20:34:37,381 Python version is: 3.13.14 | packaged by conda-forge | (main, Jun 12 2026, 09:50:31) [GCC 14.3.0]
+2026-06-25 20:34:37,524 Nanoget: Collecting metrics from summary file _prep/modelcmp/fast/sequencing_summary.txt for 1D sequencing
+2026-06-25 20:34:37,524 Nanoget: File provided doesn't exist or the path is incorrect: _prep/modelcmp/fast/sequencing_summary.txt
+2026-06-25 20:34:37,524 Nanoget: Collecting metrics from summary file _prep/modelcmp/hac/sequencing_summary.txt for 1D sequencing
+2026-06-25 20:34:37,524 Nanoget: Collecting metrics from summary file _prep/modelcmp/sup/sequencing_summary.txt for 1D sequencing
+2026-06-25 20:34:37,525 Nanoget: File provided doesn't exist or the path is incorrect: _prep/modelcmp/sup/sequencing_summary.txt
+2026-06-25 20:34:37,558 Nanoget: Finished collecting statistics from summary file _prep/modelcmp/hac/sequencing_summary.txt
+2026-06-25 20:34:37,564 Reduced DataFrame memory usage from 0.7697410583496094Mb to 0.7697410583496094Mb
