@@ -16,8 +16,14 @@ the rrn loci then turn into *dips*, which visually proves the multi-mapping.
 
 Usage:
     coverage_track.py BAM OUT.png [--window 1000] [--title "..."] [--mapq 20]
+                      [--marks bp,bp,...] [--operon OP.fna --ref GENOME.fna]
 
 BAM must be coordinate-sorted and indexed (samtools sort + samtools index).
+
+Pass --operon (a single extracted rrn operon) together with --ref (the genome it
+was mapped to) to draw a vertical line at every genomic copy: the operon is aligned
+back to the genome with minimap2, which recovers all (near-identical) copies. Or give
+explicit positions with --marks.
 """
 import argparse
 import gzip
@@ -52,6 +58,33 @@ def mosdepth_windows(bam, window, mapq=0):
     return out
 
 
+def operon_positions(operon_fa, ref_fa, chrom, min_frac=0.5):
+    """Locate every copy of a single operon on `chrom`.
+
+    The operon is ~identical across its genomic copies, so aligning it back to the
+    genome (allowing secondary hits) lands one alignment per copy. Returns the copy
+    midpoints (bp), sorted; overlapping alignments of one copy are merged."""
+    paf = subprocess.run(
+        ["minimap2", "-x", "asm5", "-N", "60", "-p", "0.05", "--secondary=yes",
+         ref_fa, operon_fa],
+        capture_output=True, text=True).stdout
+    mids = []
+    for line in paf.splitlines():
+        f = line.split("\t")
+        if len(f) < 11 or f[5] != chrom:
+            continue
+        qlen, tstart, tend, alnlen = int(f[1]), int(f[7]), int(f[8]), int(f[10])
+        if alnlen < min_frac * qlen:           # skip short partial hits
+            continue
+        mids.append((tstart + tend) / 2.0)
+    mids.sort()
+    merged = []
+    for m in mids:
+        if not merged or m - merged[-1] >= 3000:   # > operon length apart = distinct copy
+            merged.append(m)
+    return merged
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -63,6 +96,10 @@ def main():
                     help="if >0, also draw a MAPQ-filtered overlay at this threshold (e.g. 20)")
     ap.add_argument("--marks", default="",
                     help="comma-separated bp positions to mark (e.g. rrn operon locations)")
+    ap.add_argument("--operon", default=None,
+                    help="single operon FASTA; its genomic copies are located and marked")
+    ap.add_argument("--ref", default=None,
+                    help="genome FASTA the operon is aligned back to (needed with --operon)")
     args = ap.parse_args()
 
     tracks = mosdepth_windows(args.bam, args.window, mapq=0)
@@ -70,6 +107,11 @@ def main():
     chrom = max(tracks, key=lambda c: len(tracks[c][0]))
     x, y = tracks[chrom]
     median = float(np.median(y))
+
+    marks = [float(p) for p in args.marks.split(",") if p.strip()]
+    if args.operon and args.ref:
+        marks = operon_positions(args.operon, args.ref, chrom)
+        print(f"  located {len(marks)} {os.path.basename(args.operon)} copies on {chrom}")
 
     plt.figure(figsize=(12, 3.2))
     plt.plot(x / 1e6, y, lw=0.6, color="#1f77b4", label="all reads")
@@ -84,11 +126,11 @@ def main():
 
     ymax = max(median * 4, float(np.percentile(y, 99.5)))
 
-    # mark given positions (e.g. rrn operon loci) with light vertical lines
-    if args.marks:
-        for k, m in enumerate(float(p) for p in args.marks.split(",") if p.strip()):
+    # mark operon loci with light vertical lines
+    if marks:
+        for k, m in enumerate(marks):
             plt.axvline(m / 1e6, color="0.55", lw=0.8, ls=":",
-                        label="rrn operons" if k == 0 else None)
+                        label=f"rrn operons (n={len(marks)})" if k == 0 else None)
 
     # auto-annotate the largest near-zero coverage run (e.g. a strain-specific deletion)
     lowthr = 0.15 * median
