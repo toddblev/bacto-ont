@@ -61,6 +61,8 @@ def main():
     ap.add_argument("--title", default=None)
     ap.add_argument("--mapq", type=int, default=0,
                     help="if >0, also draw a MAPQ-filtered overlay at this threshold (e.g. 20)")
+    ap.add_argument("--marks", default="",
+                    help="comma-separated bp positions to mark (e.g. rrn operon locations)")
     args = ap.parse_args()
 
     tracks = mosdepth_windows(args.bam, args.window, mapq=0)
@@ -80,8 +82,33 @@ def main():
             plt.plot(fx / 1e6, fy, lw=0.6, color="#d62728",
                      label=f"MAPQ>={args.mapq} only (rrn -> dips)")
 
+    ymax = max(median * 4, float(np.percentile(y, 99.5)))
+
+    # mark given positions (e.g. rrn operon loci) with light vertical lines
+    if args.marks:
+        for k, m in enumerate(float(p) for p in args.marks.split(",") if p.strip()):
+            plt.axvline(m / 1e6, color="0.55", lw=0.8, ls=":",
+                        label="rrn operons" if k == 0 else None)
+
+    # auto-annotate the largest near-zero coverage run (e.g. a strain-specific deletion)
+    lowthr = 0.15 * median
+    best_s = best_len = run_s = run_len = 0
+    for i, v in enumerate(y):
+        if v < lowthr:
+            run_s = run_s if run_len else i
+            run_len += 1
+            if run_len > best_len:
+                best_len, best_s = run_len, run_s
+        else:
+            run_len = 0
+    if best_len * args.window >= 8000:                       # >= ~8 kb of near-zero depth
+        gx = x[best_s + best_len // 2] / 1e6
+        plt.annotate("low-coverage gap", xy=(gx, 0), xytext=(gx, ymax * 0.55),
+                     ha="center", fontsize=8, color="purple",
+                     arrowprops=dict(arrowstyle="->", color="purple", lw=1))
+
     plt.xlim(x[0] / 1e6, x[-1] / 1e6)
-    plt.ylim(0, max(median * 4, float(np.percentile(y, 99.5))))
+    plt.ylim(0, ymax)
     plt.xlabel(f"position on {chrom} (Mb)")
     plt.ylabel(f"depth ({args.window} bp windows)")
     plt.title(args.title or f"Read depth across {chrom}")

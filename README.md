@@ -37,10 +37,12 @@ jupyter lab bacto_ont.ipynb
 
 ## Data files
 
-Reference and small files are downloaded by cells inside the notebook. The large
-basecalled/demultiplexed read files are hosted externally and fetched by a download cell
-near the top of the notebook (re-running it skips files already on disk and verifies them
-by MD5).
+The code, notebook, reference rrn operons, and the static model comparison live in this
+repository. The larger raw data — the pod5 signal subsample, the per-barcode reads (raw +
+cleaned), and the four reference genomes — is a single **~580 MB tarball** attached to this
+repo's [**GitHub Release**](https://github.com/toddblev/bacto-ont/releases). The download cell
+near the top of `bacto_ont.ipynb` fetches and extracts it (verifying it by MD5); re-running is
+safe and skips the download if the data is already present.
 
 ## Repository layout
 

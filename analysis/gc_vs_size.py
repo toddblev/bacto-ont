@@ -50,8 +50,9 @@ def main():
         print(f"{r['strain']:35s} {size/1e6:5.2f} Mb   GC {gc:4.1f}%   rrn {r['rrn_copies']}")
 
     plt.figure(figsize=(7.5, 5.5))
-    for label, mb, gc, rrn in data:
-        plt.scatter(mb, gc, s=90, zorder=3)
+    for i, (label, mb, gc, rrn) in enumerate(data):
+        plt.scatter(mb, gc, s=110, color=plt.cm.tab10(i), zorder=3,
+                    edgecolor="black", linewidth=0.5)
         plt.annotate(f"{label}\n({rrn} rrn operons)", (mb, gc),
                      textcoords="offset points", xytext=(8, 6), fontsize=8)
     gcs = [d[2] for d in data]
