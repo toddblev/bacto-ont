@@ -2,7 +2,7 @@
 """
 rrn_copy_number.py - estimate rRNA (rrn) operon copy number from ONT coverage depth.
 
-The "collapsed reference" trick:
+The "collapsed reference":
   1. genome-median depth  = the single-copy depth, measured from the full-genome BAM.
   2. map ALL reads to ONE extracted rrn operon  ->  reads from every genomic copy
      pile onto the single locus.

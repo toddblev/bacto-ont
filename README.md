@@ -10,13 +10,13 @@ The four strains (one barcode each, kit `SQK-RBK114-24`):
 
 | Strain | Genome | Size | GC% | rrn operons |
 |---|---|---:|---:|---:|
-| *Lacticaseibacillus casei* (ATCC 393) | small, low-GC | ~3.0 Mb | ~46% | 5 |
-| *Bacillus subtilis* (168) | spore-former | ~4.2 Mb | ~44% | 10 |
-| *Escherichia coli* DH5α (K-12 lab strain) | the cloning workhorse | ~4.6 Mb | ~51% | 7 |
-| *Escherichia coli* O157(:H7) | same species, pathogen | ~5.5 Mb | ~51% | 7 |
+| *Lacticaseibacillus casei* (ATCC 393) | small, low-GC | 3.0 Mb | 48% | 5 |
+| *Bacillus subtilis* (168) | spore-former | 4.2 Mb | 44% | 10 |
+| *Escherichia coli* DH5α (K-12 lab strain) | the cloning workhorse | 4.6 Mb | 51% | 7 |
+| *Escherichia coli* O157(:H7) | same species, pathogen | 5.5 Mb | 51% | 7 |
 
 The tutorial is a single Jupyter notebook, `bacto_ont.ipynb`. It covers raw signal (pod5)
-files, the Dorado basecalling models, **barcode demultiplexing**, read quality control,
+files, the Dorado basecalling models, barcode demultiplexing, read quality control,
 mapping with minimap2, and coverage-based comparison of the four genomes.
 
 ## Requirements
@@ -38,8 +38,8 @@ jupyter lab bacto_ont.ipynb
 ## Data files
 
 The code, notebook, reference rrn operons, and the static model comparison live in this
-repository. The larger raw data — the pod5 signal subsample, the per-barcode reads (raw +
-cleaned), and the four reference genomes — is a single **~580 MB tarball** attached to this
+repository. The larger raw data -- the pod5 signal subsample, the per-barcode reads (raw +
+cleaned), and the four reference genomes -- is a single ~580 MB tarball attached to this
 repo's [**GitHub Release**](https://github.com/toddblev/bacto-ont/releases). The download cell
 near the top of `bacto_ont.ipynb` fetches and extracts it (verifying it by MD5); re-running is
 safe and skips the download if the data is already present.
