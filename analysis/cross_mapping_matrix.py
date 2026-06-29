@@ -9,11 +9,13 @@ Builds a barcode x reference table of "% of reads that map", which:
     so "% mapped" alone cannot separate strains of one species.
 
 Reads the barcode list + references from samples.tsv. Expects each barcode's reads
-at <reads-dir>/<barcode>.fastq (the notebook stages them there after demux).
+at <reads-dir>/<barcode><suffix> (default suffix .fastq; pass --suffix .clean.fastq
+to run on the QC-filtered reads instead of the raw ones).
 
 Usage:
     cross_mapping_matrix.py [--samples samples.tsv] [--reads-dir reads]
-                            [--out analysis/cross_mapping_matrix.png] [--threads 8]
+                            [--suffix .fastq] [--out analysis/cross_mapping_matrix.png]
+                            [--title "..."] [--threads 8]
 """
 import argparse
 import csv
@@ -49,7 +51,10 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--samples", default="samples.tsv")
     ap.add_argument("--reads-dir", default="reads")
+    ap.add_argument("--suffix", default=".fastq",
+                    help="read filename suffix per barcode (e.g. .clean.fastq for QC-filtered reads)")
     ap.add_argument("--out", default="analysis/cross_mapping_matrix.png")
+    ap.add_argument("--title", default=None)
     ap.add_argument("--threads", type=int, default=8)
     args = ap.parse_args()
 
@@ -59,7 +64,7 @@ def main():
     bc_labels = [r["strain"] for r in rows]
     ref_labels = [r["strain"] for r in rows]
     refs = [r["reference"] for r in rows]
-    fastqs = [os.path.join(args.reads_dir, r["barcode"] + ".fastq") for r in rows]
+    fastqs = [os.path.join(args.reads_dir, r["barcode"] + args.suffix) for r in rows]
 
     M = np.zeros((len(rows), len(rows)))
     print("mapping each barcode against each reference ...")
@@ -77,7 +82,7 @@ def main():
     ax.set_yticklabels(bc_labels, fontsize=8)
     ax.set_xlabel("mapped against reference")
     ax.set_ylabel("reads from barcode")
-    ax.set_title("Cross-mapping: % of each barcode's reads that map")
+    ax.set_title(args.title or "Cross-mapping: % of each barcode's reads that map")
     for i in range(len(rows)):
         for j in range(len(rows)):
             ax.text(j, i, f"{M[i, j]:.0f}", ha="center", va="center",
