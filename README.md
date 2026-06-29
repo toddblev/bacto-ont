@@ -26,6 +26,23 @@ mapping with minimap2, and coverage-based comparison of the four genomes.
 - No GPU is needed: basecalling and demultiplexing are already done; the notebook analyses their output
 
 ## Setup
+```bash
+#Mac OS commands from https://www.anaconda.com/docs/getting-started/miniconda/install/mac-cli-install 
+
+curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh
+
+bash ./Miniconda3-latest-MacOSX-arm64.sh
+
+#Linux and WSL from https://www.anaconda.com/docs/getting-started/miniconda/install/linux-install
+
+curl -O https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+
+bash ./Miniconda3-latest-Linux-x86_64.sh
+
+# All setups after install
+
+conda config --set auto_activate_base false
+```
 
 ```bash
 git clone https://github.com/toddblev/bacto-ont.git
