@@ -49,6 +49,7 @@ git clone https://github.com/toddblev/bacto-ont.git
 cd bacto-ont
 conda env create -f environment.yml
 conda activate bip
+conda install jupyterlab
 jupyter lab bacto_ont.ipynb
 ```
 
